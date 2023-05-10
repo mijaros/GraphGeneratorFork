@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "generator-test"
+version = "0.1.0"
+description = ""
+authors = ["Miroslav Jaros <jarosmi7@fit.cvut.cz>"]
+license = "Apache-2.0"
+#readme = "README.md"
+packages = [{include = "suite"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.3.1"
+requests = "^2.29.0"
+selenium = "^4.9.0"
+selenium-page-factory = "^2.6"
+pytest-html = "^3.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

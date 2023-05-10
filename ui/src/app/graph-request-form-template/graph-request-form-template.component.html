@@ -1,0 +1,153 @@
+<div [formGroup]="parentGraphForm">
+  <div class="row">
+    <div class="col-lg-6">
+      <label class="form-label" for="fGraphType">Graph Kind</label>
+      <select [ngClass]="{'is-invalid':parentGraphForm.errors?.['']}" aria-describedby="iGraphKind"
+              aria-label="Select graph kind" class="form-select" formControlName="type" id="fGraphType"
+              ngbDropdown
+      >
+        <option *ngFor="let t of values" value="{{t}}">{{explanation(t)}}</option>
+      </select>
+      <div class="invalid-feedback" id="iGraphKind">
+        Invalid graph type selected.
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <label class="form-label" [for]="buildId('fNodeNumber')"># nodes</label>
+      <input [attr.aria-describedby]="buildId(parentGraphForm.errors?.['nodesError'] ? 'iNodeNumber' : 'vNodeNumber')" [ngClass]="{'is-invalid': parentGraphForm.errors?.['nodesError'], 'is-valid':  !parentGraphForm.errors?.['nodesError']}" class="form-control" formControlName="nodes"
+             [id]="buildId('fNodeNumber')"
+             type="number">
+      <div class="invalid-feedback" [id]="buildId('iNodeNumber')">
+        {{parentGraphForm.errors?.['nodesMessage']}}
+      </div>
+      <div class="valid-feedback" [id]="buildId('vNodeNumber')">
+        Number of nodes is valid.
+      </div>
+    </div>
+  </div>
+  <div [ngSwitch]="parentGraphForm.controls['type'].value" class="row">
+    <ng-template ngSwitchCase="{{GraphType.K_REGULAR}}">
+      <div class="col-lg-6">
+        <label class="form-label" for="fGraphDegree">Degree</label>
+        <input [attr.aria-describedby]="parentGraphForm.errors?.['invalidDegree'] ? 'iGraphDegree' : 'vGraphDegree'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['invalidDegree'], 'is-valid': !parentGraphForm.errors?.['invalidDegree']}" class="form-control"
+               formControlName="node_degree"
+               id="fGraphDegree"
+               type="number">
+        <div class="invalid-feedback" id="iGraphDegree">
+          <!--        {{parentGraphForm.errors?.['nodesLow'] ? "Number of nodes must be higher then 0." : "Number of nodes must be lower than 100."}}-->
+          {{parentGraphForm.errors?.['degreeMessage']}}
+        </div>
+        <div class="valid-feedback" id="vGraphDegree">
+          Degree is valid.
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{GraphType.AT_LEAST}}">
+      <div class="col-lg-6">
+        <label class="form-label" for="fGraphDegreeAtLeast">Minimal Degree</label>
+        <input [attr.aria-describedby]="parentGraphForm.errors?.['invalidDegree'] ? 'iGraphDegreeAtLeast' : 'vGraphDegreeAtLeast'"
+               [ngClass]="{'is-invalid': parentGraphForm.errors?.['invalidDegree'], 'is-valid': !parentGraphForm.errors?.['invalidDegree']}" class="form-control"
+          class="form-control" formControlName="node_degree" id="fGraphDegreeAtLeast" type="number">
+        <div class="invalid-feedback" id="iGraphDegreeAtLeast">
+          <!--        {{parentGraphForm.errors?.['nodesLow'] ? "Number of nodes must be higher then 0." : "Number of nodes must be lower than 100."}}-->
+          {{parentGraphForm.errors?.['degreeMessage']}}
+        </div>
+        <div class="valid-feedback" id="vGraphDegreeAtLeast">
+          Degree is valid.
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{GraphType.BETWEEN}}">
+      <div class="col-lg-6">
+        <label class="form-label" for="fGraphDegreeMin">Min Degree</label>
+        <input [attr.aria-describedby]="parentGraphForm.errors?.['degMin'] ? 'iGraphDegreeMin' : 'vGraphDegreeMin'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['degMin'], 'is-valid': !parentGraphForm.errors?.['degMin']}" class="form-control" formControlName="node_degree"
+               id="fGraphDegreeMin"
+               type="number">
+        <div class="invalid-feedback" id="iGraphDegreeMin">
+          {{parentGraphForm.errors?.['degMinMessage']}}
+        </div>
+        <div class="valid-feedback" id="vGraphDegreeMin">
+          Minimal degree is correct.
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label" for="fGraphDegreeMax">Max Degree</label>
+        <input [attr.aria-describedby]="parentGraphForm.errors?.['degMax'] ? 'iGraphDegreeMax' : 'vGraphDegreeMax'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['degMax'], 'is-valid': !parentGraphForm.errors?.['degMax']}"
+               class="form-control" formControlName="node_degree_max"
+               id="fGraphDegreeMax"
+               type="number"
+        >
+        <div class="invalid-feedback" id="iGraphDegreeMax">
+          {{parentGraphForm.errors?.['degMaxMessage']}}
+        </div>
+        <div class="valid-feedback" id="vGraphDegreeMax">
+          Max degree is valid.
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngSwitchCase="{{GraphType.COMPLETE}}">
+
+    </ng-template>
+    <ng-template ngSwitchCase="{{GraphType.AVERAGE}}">
+      <div class="col-lg-6">
+        <label class="form-label" for="fGraphAverageDeg">Average degree</label>
+        <input [attr.aria-describedby]="parentGraphForm.errors?.['avgDeg'] ? 'iGraphAverageDeg' : 'vGraphAverageDeg'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['avgDeg'], 'is-valid': !parentGraphForm.errors?.['avgDeg']}"
+               class="form-control" formControlName="node_degree_average" id="fGraphAverageDeg"
+               step="0.1"
+               type="number">
+        <div class="invalid-feedback" id="iGraphAverageDeg">{{parentGraphForm.errors?.['avgDegMessage']}}</div>
+        <div class="valid-feedback" id="vGraphAverageDeg">Average degree is valid.</div>
+      </div>
+    </ng-template>
+
+  </div>
+  <div class="row gen-form">
+    <div class="col-lg-3">
+      <div class="form-check">
+        <input class="form-check-input" formControlName="connected" id="fGraphConnected" type="checkbox">
+        <label class="form-check-label" for="fGraphConnected">Connected</label>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" formControlName="weighted" id="fGraphWeighted" role="switch" type="checkbox">
+        <label class="form-check-label" for="fGraphWeighted">Weighted</label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="parentGraphForm.controls['weighted'].value" class="row gen-form">
+    <div class="col-lg-6">
+      <label class="form-label" for="fGraphWeightMin">Min Weight</label>
+      <input [attr.aria-describedby]="parentGraphForm.errors?.['weightMin'] ? 'iGraphWeightMin' : 'vGraphWeightMin'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['weightMin'], 'is-valid': !parentGraphForm.errors?.['weightMin']}"
+             class="form-control" formControlName="weight_min"
+             id="fGraphWeightMin"
+             type="number">
+      <div class="invalid-feedback" id="iGraphWeightMin">{{parentGraphForm.errors?.['weightMinMessage']}}</div>
+      <div class="valid-feedback" id="vGraphWeightMin">Min weight is valid.</div>
+    </div>
+    <div class="col-lg-6">
+      <label class="form-label" for="fGraphWeightMin">Max Weight</label>
+      <input [attr.aria-describedby]="parentGraphForm.errors?.['weightMax'] ? 'iGraphWeightMax': 'vGraphWeightMax'" [ngClass]="{'is-invalid': parentGraphForm.errors?.['weightMax'], 'is-valid': !parentGraphForm.errors?.['weightMax']}" class="form-control" formControlName="weight_max"
+             id="fGraphWeightMax"
+             type="number">
+      <div class="invalid-feedback" id="iGraphWeightMax">{{parentGraphForm.errors?.['weightMaxMessage']}}</div>
+      <div class="valid-feedback" id="vGraphWeightMax">Max weight is valid.</div>
+    </div>
+  </div>
+  <div *ngIf="canHaveSeed" class="row gen-form align-items-xl-center">
+    <div class="col-lg-3 align-items-center">
+      <div class="form-check form-switch align-middle">
+        <input (change)="seedToggle()" [checked]="enableSeed" class="form-check-input" id="fGraphSeedSet"
+               role="switch" type="checkbox">
+        <label class="form-check-label" for="fGraphSeedSet">Custom seed</label>
+      </div>
+    </div>
+    <div *ngIf="enableSeed" class="col-lg">
+      <label class="form-label" for="fGraphSeed">Seed value</label>
+      <input class="form-control" formControlName="seed"
+             id="fGraphSeed" type="number">
+      <div class="invalid-feedback" id="iGraphSeed">{{parentGraphForm.errors?.['weightMinMessage']}}</div>
+      <div class="valid-feedback" id="vGraphSeed">Min weight is valid.</div>
+    </div>
+  </div>
+</div>

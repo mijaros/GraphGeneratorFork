@@ -1,0 +1,106 @@
+<h2>Graph Batches</h2>
+<p>
+  <button (click)="formToggle()" [ngClass]="{'btn-primary': showFrom, 'btn-outline-primary': !showFrom}"
+          class="btn"
+          type="button">+ Batch
+  </button>
+</p>
+
+<div #collapse="ngbCollapse" [(ngbCollapse)]="!showFrom" class="row">
+  <app-batch-request (submitted)="handleForm($event)">
+  </app-batch-request>
+</div>
+<div class="table-responsive-lg">
+  <table class="table">
+    <thead>
+    <tr>
+      <th></th>
+      <th>Identifier</th>
+      <th>Status</th>
+      <th>Number</th>
+      <th>Type</th>
+      <th>Nodes</th>
+      <th>TTL</th>
+      <th>Download</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container
+      *ngFor="let batch of batches | keyvalue: batchInDeletedOrder | slice: (page - 1)*pageSize : page*pageSize">
+      <tr class="head">
+        <td>
+          <button (click)="toggleDetails(batch.key.valueOf())" class="accordion-button collapsed">
+            <fa-icon [icon]="faCircleInfo"></fa-icon>
+          </button>
+        </td>
+        <td>{{batch.value.id}}</td>
+        <td>
+          <span [ngClass]="getClass(batch.value.status)" class="badge">{{explain(batch.value.status)}}</span>
+        </td>
+        <td>{{batch.value.number}}</td>
+        <td>{{explanation(batch.value.base.type)}}</td>
+        <td>{{batch.value.base.nodes}}</td>
+        <td>{{batch.value.deleted |  date: 'HH:mm:ss O' : Intl.DateTimeFormat().resolvedOptions().timeZone }}</td>
+        <td>
+          <div *ngIf="batch.value.status === RequestStatus.FINISHED" ngbDropdown>
+            <button aria-expanded="false" class="btn btn-outline-primary " data-bs-toggle="dropdown" ngbDropdownToggle
+                    type="button">
+              <fa-icon [icon]="faDownload"></fa-icon>&nbsp;Download
+            </button>
+            <div ngbDropdownMenu>
+              <a download href="/api/v1/batch/{{batch.value.id}}/download?graphKind=matrix" ngbDropdownItem>Matrix
+                (.txt)</a>
+              <a download href="/api/v1/batch/{{batch.value.id}}/download?graphKind=dot" ngbDropdownItem>Graphviz
+                (.dot)</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="details">
+        <td colspan="12">
+          <div #collapse="ngbCollapse" [ngbCollapse]="detailsToggle != batch.key" class="collapse">
+            <div [ngClass]="{'border-success': batch.value.status == RequestStatus.FINISHED}"
+                 class="card mx-5 graphDetails">
+              <div class="card-header">
+                <h6 class="card-title">ID: {{batch.key}}</h6>
+              </div>
+              <div class="card-body">
+                <table class="table table-borderless table-sm">
+                  <tr>
+                    <td class="text-nowrap batches"># of graphs</td>
+                    <td>{{batch.value.number}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-nowrap batches">Deleted</td>
+                    <td>{{batch.value.deleted | date: 'y-MM-dd HH:mm:ss O' : Intl.DateTimeFormat().resolvedOptions().timeZone }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-nowrap batches">Status</td>
+                    <td>{{explain(batch.value.status)}}</td>
+                  </tr>
+
+
+                  <tr>
+                    <td class="batches">Base graph</td>
+                    <td>
+                      <app-graph-details [graphDetails]="batch.value.base" [graphTemplate]="true"></app-graph-details>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-nowrap batches">List of ids</td>
+                    <td class="graphList">{{graphIdList(batch.value.graph_ids)}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+  <ngb-pagination [(page)]="page" [collectionSize]="batches.size" [pageSize]="pageSize"></ngb-pagination>
+
+</div>
+
+

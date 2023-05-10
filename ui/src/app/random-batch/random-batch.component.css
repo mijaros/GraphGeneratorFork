@@ -1,0 +1,17 @@
+tr.head td {
+  border-bottom: 0;
+}
+
+tr.details td {
+  border-top: 0;
+}
+
+.graphList {
+  font-size: small;
+  font-family: "DejaVu Sans Mono";
+}
+
+td.batches {
+  width: 7em;
+  font-weight: bold;
+}

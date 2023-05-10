@@ -1,0 +1,8 @@
+tr.head td {
+  border-bottom: 0;
+}
+
+tr.details td {
+  border-top: 0;
+}
+

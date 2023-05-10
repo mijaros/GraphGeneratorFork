@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-xl-4 graphDetails">
+    <table class="table table-borderless">
+      <tr *ngIf="!graphTemplate">
+        <td class="rhead">Status:</td>
+        <td>{{explain(graphDetails.status)}}</td>
+      </tr>
+      <tr>
+        <td class="rhead"># Nodes:</td>
+        <td>{{graphDetails.nodes}}</td>
+      </tr>
+      <tr *ngIf="!graphTemplate">
+        <td class="rhead">Deleted:</td>
+        <td>{{graphDetails.deleted | date: 'y-MM-dd HH:mm:ss z' : Intl.DateTimeFormat().resolvedOptions().timeZone }}</td>
+      </tr>
+      <tr *ngIf="!graphTemplate">
+        <td class="rhead">Seed:</td>
+        <td>{{graphDetails.seed}}</td>
+      </tr>
+      <tr *ngIf="graphDetails.type !== GraphType.COMPLETE">
+        <td class="rhead">Connected:</td>
+        <td>
+          <fa-icon [classes]="" [icon]="graphDetails.connected ? faCheckCircle : faCircleXmark"></fa-icon>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-xl-4 graphDetails">
+    <table class="table table-borderless">
+      <tr>
+        <td class="rhead">Type:</td>
+        <td>{{explanation(graphDetails.type)}}</td>
+      </tr>
+      <ng-container [ngSwitch]="graphDetails.type">
+        <tr *ngSwitchCase="GraphType.K_REGULAR">
+          <td class="rhead">Degree:</td>
+          <td>{{graphDetails.node_degree}}</td>
+        </tr>
+        <tr *ngSwitchCase="GraphType.AT_LEAST">
+          <td class="rhead">Minimal degree</td>
+          <td>{{graphDetails.node_degree}}</td>
+        </tr>
+        <tr *ngSwitchCase="GraphType.COMPLETE">
+        </tr>
+        <ng-container *ngSwitchCase="GraphType.BETWEEN">
+          <tr>
+            <td>Min Deg:</td>
+            <td>{{graphDetails.node_degree}}</td>
+          </tr>
+          <tr>
+            <td>Max Deg:</td>
+            <td>{{graphDetails.node_degree_max}}</td>
+          </tr>
+        </ng-container>
+        <tr *ngSwitchCase="GraphType.AVERAGE">
+          <td>Average Degree:</td>
+          <td>{{graphDetails.node_degree_average}}</td>
+        </tr>
+      </ng-container>
+      <tr>
+        <td class="rhead">Weighted:</td>
+        <td>
+          <fa-icon [classes]="" [icon]="graphDetails.weighted ? faCheckCircle : faCircleXmark"></fa-icon>
+        </td>
+      </tr>
+      <ng-container *ngIf="graphDetails.weighted">
+        <tr>
+          <td class="rhead">Min Weight:</td>
+          <td>{{graphDetails.weight_min}}</td>
+        </tr>
+        <tr>
+          <td class="rhead">Max Weight:</td>
+          <td>{{graphDetails.weight_max}}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</div>
+

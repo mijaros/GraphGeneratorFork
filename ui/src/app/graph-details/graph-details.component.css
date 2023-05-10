@@ -1,0 +1,15 @@
+div.graphDetails td {
+  padding: 0;
+  margin: 0;
+  font-family: "DejaVu Sans Mono";
+  /*font-size: small;*/
+}
+
+td.rhead {
+  font-weight: bold;
+}
+
+div.graphDetails h6 {
+  font-family: "DejaVu Sans Mono";
+
+}

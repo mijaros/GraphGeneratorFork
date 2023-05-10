@@ -1,0 +1,81 @@
+<h2>Individual Graph Requests</h2>
+<p>
+  <button (click)="toggleForm()" [ngClass]="{'btn-primary': showForm, 'btn-outline-primary': !showForm}" class="btn"
+          id="graphFormToggle">
+    <fa-icon [icon]="faPlus"></fa-icon>
+    New Graph
+  </button>
+</p>
+<div #collapse="ngbCollapse" [(ngbCollapse)]="!showForm" class="row">
+  <app-graph-request (eventEmitter)="submitForm($event)" [standalone]="true">
+  </app-graph-request>
+</div>
+<div class="table-responsive-lg">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th></th>
+      <th>Identifier</th>
+      <th>Status</th>
+      <th>Type</th>
+      <th>Nodes</th>
+      <th>TTL</th>
+      <th>Download</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container
+      *ngFor="let graph of graphs | keyvalue: graphInDeletedOrder | slice:  (page - 1) * pageSize : page * pageSize  ">
+      <tr class="head">
+        <td>
+          <button (click)="detailToggle(graph.key)" class="accordion-button collapsed">
+            <fa-icon [icon]="faCircleInfo"></fa-icon>
+          </button>
+        </td>
+        <td>{{graph.value.id}}</td>
+        <td>
+      <span [ngClass]="getClass(graph.value.status)" class="badge">
+        {{explain(graph.value.status)}}
+      </span>
+        </td>
+        <td>{{explanation(graph.value.type)}}</td>
+        <td>{{graph.value.nodes}}</td>
+        <td>{{graph.value.deleted | date: 'HH:mm:ss O' : Intl.DateTimeFormat().resolvedOptions().timeZone }}</td>
+        <td>
+          <div *ngIf="graph.value.status === RequestStatus.FINISHED" ngbDropdown>
+            <button aria-expanded="false" class="btn btn-outline-primary btn-sm" data-bs-toggle="dropdown" ngbDropdownToggle
+                    type="button">
+              <fa-icon [icon]="faDownload"></fa-icon>&nbsp;Download
+            </button>
+            <div ngbDropdownMenu>
+              <a download href="/api/v1/graph/{{graph.value.id}}/download?graphKind=matrix" ngbDropdownItem>Matrix
+                (.txt)</a>
+              <a download href="/api/v1/graph/{{graph.value.id}}/download?graphKind=dot" ngbDropdownItem>Dot (.dot)</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="details">
+        <td colspan="12">
+          <div #collapse="ngbCollapse" [ngbCollapse]="expandedDetails !== graph.key" class="collapse">
+            <div [ngClass]="{'border-success': graph.value.status == RequestStatus.FINISHED}"
+                 class="card mx-5 graphDetails">
+              <div class="card-header">
+                <h6 class="card-title">ID: {{graph.key}}</h6>
+              </div>
+              <div class="card-body">
+                <app-graph-details [graphDetails]="graph.value"></app-graph-details>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+  <ngb-pagination [(page)]="page" [collectionSize]="graphs.size" [maxSize]="8" [pageSize]="pageSize"></ngb-pagination>
+</div>
+<div class="container-sm">
+
+</div>

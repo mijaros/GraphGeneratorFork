@@ -1,0 +1,42 @@
+<div class="card border-primary">
+  <div class="card-header">{{explanation(type)}} Graph</div>
+  <ng-container ngSwitch="{{type}}">
+    <div *ngSwitchCase="GraphType.K_REGULAR" class="card-body ">
+      <p>
+        In <b>Regular graphs</b> all nodes have the same degree. The maximal
+        allowed value for degree is number of nodes minus one (which denotes complete graph).
+      </p>
+      <p>Another limit of regular graphs is, that product of degree and nodes must be even number, e.g.
+        if you'd need 3-regular graph, you can use only even number of nodes.</p>
+    </div>
+    <div *ngSwitchCase="GraphType.COMPLETE" class="card-body ">
+      <p>
+        In <b>Complete Graph</b> every node is connected (e.g. there is an edge) with every other
+        node in the graph.
+      </p>
+    </div>
+    <div *ngSwitchCase="GraphType.AVERAGE" class="card-body ">
+      <p>
+        In this kind of graph the number of edges is equal to <code>(avg * nodes) / 2</code>.
+      </p>
+      <p>Please note that in order to make connected graph, the average degree must be at least 2.</p>
+    </div>
+    <div *ngSwitchCase="GraphType.BETWEEN" class="card-body ">
+      <p>
+        This kind of graph, the degree of all nodes is at least equal to <var>Min degree</var> and at most
+        <var>Max degree</var>.
+      </p>
+      <ul>
+        <li>Min degree must be non-negative number smaller than <code>nodes - 1</code>.</li>
+        <li>Max degree must be strictly bigger than <var>Min degree</var> and also smaller than <code>nodes - 1</code>.
+        </li>
+      </ul>
+    </div>
+    <div *ngSwitchCase="GraphType.AT_LEAST" class="card-body ">
+      <p>
+        This kind of graph defines the minimal degree for the graph. So the degrees in resulting graphs will be
+        on interval <code>&lt;min_deg&semi; nodes - 1&gt; </code>.
+      </p>
+    </div>
+  </ng-container>
+</div>

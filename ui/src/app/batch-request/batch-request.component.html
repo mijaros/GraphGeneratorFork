@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="card form-card">
+      <div class="card-header">New Batch request</div>
+      <div class="card-body">
+        <form (ngSubmit)="onSubmit()" [formGroup]="batchForm">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label" for="fBatchSize"># graphs</label>
+              <input [attr.aria-describedby]="batchForm.errors?.['numberInvalid'] ? 'iBatchSize' : 'vBatchSize'"
+                     [ngClass]="{'is-invalid': batchForm.errors?.['numberInvalid'], 'is-valid': !batchForm.errors?.['numberInvalid']}"
+                     class="form-control" formControlName="number" id="fBatchSize" type="number">
+              <div class="invalid-feedback" id="iBatchSize">
+                {{batchForm.errors?.['numberInvalidMessage']}}
+              </div>
+              <div class="valid-feedback" id="vBatchSize">
+                Number of graphs is valid.
+              </div>
+            </div>
+          </div>
+          <app-graph-request-form-template [parentGraphForm]="this.graphForm.form" [idPrefix]="'batchForm'">
+          </app-graph-request-form-template>
+          <div class="row submit-cls">
+            <div class="col-md-2">
+              <button [disabled]="!this.batchForm.valid" class="btn btn-primary" type="submit" id="batchSubmit">Submit</button>
+            </div>
+            <div class="col-md-2">
+              <button (click)="onCancel()" class="btn btn-outline-primary" type="button" id="batchCancel">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="graphForm.form.controls.type.value !== null" class="col-md-4">
+    <app-graph-kind-desc [type]="graphForm.form.controls.type.value!"></app-graph-kind-desc>
+  </div>
+
+</div>

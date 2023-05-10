@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">New Graph request</div>
+      <div class="card-body">
+        <form (ngSubmit)="onSubmit()" [formGroup]="graphForm.form">
+          <app-graph-request-form-template [canHaveSeed]="true"
+                                           [parentGraphForm]="this.graphForm.form"
+                                           [idPrefix]="'graphRequest'"></app-graph-request-form-template>
+          <div class="row submit-cls">
+            <div class="col-2">
+              <button *ngIf="standalone" [disabled]="!this.graphForm.valid" class="btn btn-primary" id="fNewGraphSubmit"
+                      type="submit">Submit
+              </button>
+            </div>
+            <div class="col-2">
+              <button (click)="onCancel()" aria-label="Cancel" class="btn btn-outline-primary" id="fNewGraphCancel"
+                      type="button">Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="graphForm.form.controls.type.value !== null" class="col-md-4">
+    <app-graph-kind-desc [type]="graphForm.form.controls.type.value!"></app-graph-kind-desc>
+  </div>
+</div>
